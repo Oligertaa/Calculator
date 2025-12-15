@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="sq">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator i Notave</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f2f2f2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .box {
+            background: white;
+            padding: 25px;
+            width: 300px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+
+        input {
+            width: 90%;
+            padding: 10px;
+            margin: 5px 0;
+            font-size: 16px;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            background: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 5px;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+
+        #rezultati {
+            margin-top: 15px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="box">
+        <h2>Kalkulator i Mesatares</h2>
+
+        <input type="number" id="n1" placeholder="Nota 1">
+        <input type="number" id="n2" placeholder="Nota 2">
+        <input type="number" id="n3" placeholder="Nota 3">
+
+        <button onclick="llogarit()">Llogarit Mesataren</button>
+
+        <p id="rezultati"></p>
+    </div>
+
+    <script>
+        function llogarit() {
+            let n1 = parseFloat(document.getElementById("n1").value);
+            let n2 = parseFloat(document.getElementById("n2").value);
+            let n3 = parseFloat(document.getElementById("n3").value);
+
+            if (isNaN(n1) || isNaN(n2) || isNaN(n3)) {
+                document.getElementById("rezultati").innerText = "Ju lutem plotësoni të gjitha notat!";
+                return;
+            }
+
+            let mesatarja = (n1 + n2 + n3) / 3;
+
+            document.getElementById("rezultati").innerText = 
+                "Mesatarja: " + mesatarja.toFixed(2);
+        }
+window.onload = function () {
+  shfaqHistorine();
+};
+
+function llogaritMesataren() {
+  const nota1 = Number(document.getElementById("nota1").value);
+  const nota2 = Number(document.getElementById("nota2").value);
+  const nota3 = Number(document.getElementById("nota3").value);
+
+  const mesatarja = ((nota1 + nota2 + nota3) / 3).toFixed(2);
+
+  document.getElementById("rezultati").innerText =
+    "Mesatarja: " + mesatarja;
+
+  // Marrim historinë ekzistuese ose krijojmë bosh
+  let historia = JSON.parse(localStorage.getItem("historiaMesatareve")) || [];
+
+  // Shtojmë rezultatin e ri në fillim
+  historia.unshift({
+    nota1,
+    nota2,
+    nota3,
+    mesatarja,
+    data: new Date().toLocaleString()
+  });
+
+  // Mbajmë vetëm 10 të fundit
+  if (historia.length > 10) {
+    historia.pop();
+  }
+
+  // Ruajmë në localStorage
+  localStorage.setItem(
+    "historiaMesatareve",
+    JSON.stringify(historia)
+  );
+
+  // Rifreskojmë listën në faqe
+  shfaqHistorine();
+}
+
+function shfaqHistorine() {
+  const lista = document.getElementById("historia");
+  lista.innerHTML = "";
+
+  const historia = JSON.parse(localStorage.getItem("historiaMesatareve")) || [];
+
+  historia.forEach((item, index) => {
+    const li = document.createElement("li");
+    li.innerText =
+      `${index + 1}. (${item.nota1}, ${item.nota2}, ${item.nota3}) → Mesatarja: ${item.mesatarja}`;
+    lista.appendChild(li);
+  });
+}
+
+    </script>
+
+</body>
+</html>
